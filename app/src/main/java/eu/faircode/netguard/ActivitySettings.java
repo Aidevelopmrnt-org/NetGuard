@@ -1258,7 +1258,19 @@ public class ActivitySettings extends AppCompatActivity implements SharedPrefere
         prefs.edit().putBoolean("enabled", false).apply();
         ServiceSinkhole.stop("import", this, false);
 
-        XMLReader reader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+        SAXParserFactory spf = SAXParserFactory.newInstance();
+        // Disable XXE attacks
+        try {
+            spf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            spf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            spf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            spf.setXIncludeAware(false);
+            spf.setExpandEntityReferences(false);
+        } catch (Exception e) {
+            Log.w(TAG, "Could not set XXE protection features: " + e);
+        }
+        
+        XMLReader reader = spf.newSAXParser().getXMLReader();
         XmlImportHandler handler = new XmlImportHandler(this);
         reader.setContentHandler(handler);
         reader.parse(new InputSource(in));

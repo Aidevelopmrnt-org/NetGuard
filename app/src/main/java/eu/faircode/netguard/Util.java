@@ -477,7 +477,12 @@ public class Util {
         try {
             PackageManager pm = context.getPackageManager();
             String pkg = context.getPackageName();
-            PackageInfo info = pm.getPackageInfo(pkg, PackageManager.GET_SIGNATURES);
+            PackageInfo info;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                info = pm.getPackageInfo(pkg, PackageManager.GET_SIGNING_CERTIFICATES);
+            } else {
+                info = pm.getPackageInfo(pkg, PackageManager.GET_SIGNATURES);
+            }
             byte[] cert = info.signatures[0].toByteArray();
             MessageDigest digest = MessageDigest.getInstance("SHA1");
             byte[] bytes = digest.digest(cert);
