@@ -477,27 +477,22 @@ public class Util {
         try {
             PackageManager pm = context.getPackageManager();
             String pkg = context.getPackageName();
-            PackageInfo info;
+            byte[] cert;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                info = pm.getPackageInfo(pkg, PackageManager.GET_SIGNING_CERTIFICATES);
+                PackageInfo info = pm.getPackageInfo(pkg, PackageManager.GET_SIGNING_CERTIFICATES);
                 // Use signingInfo for API 28+
-                byte[] cert = info.signingInfo.getApkContentsSigners()[0].toByteArray();
-                MessageDigest digest = MessageDigest.getInstance("SHA1");
-                byte[] bytes = digest.digest(cert);
-                StringBuilder sb = new StringBuilder();
-                for (byte b : bytes)
-                    sb.append(String.format("%02x", b & 0xff));
-                return sb.toString();
+                cert = info.signingInfo.getApkContentsSigners()[0].toByteArray();
             } else {
-                info = pm.getPackageInfo(pkg, PackageManager.GET_SIGNATURES);
-                byte[] cert = info.signatures[0].toByteArray();
-                MessageDigest digest = MessageDigest.getInstance("SHA1");
-                byte[] bytes = digest.digest(cert);
-                StringBuilder sb = new StringBuilder();
-                for (byte b : bytes)
-                    sb.append(String.format("%02x", b & 0xff));
-                return sb.toString();
+                PackageInfo info = pm.getPackageInfo(pkg, PackageManager.GET_SIGNATURES);
+                cert = info.signatures[0].toByteArray();
             }
+            
+            MessageDigest digest = MessageDigest.getInstance("SHA1");
+            byte[] bytes = digest.digest(cert);
+            StringBuilder sb = new StringBuilder();
+            for (byte b : bytes)
+                sb.append(String.format("%02x", b & 0xff));
+            return sb.toString();
         } catch (Throwable ex) {
             Log.e(TAG, ex.toString() + "\n" + Log.getStackTraceString(ex));
             return null;

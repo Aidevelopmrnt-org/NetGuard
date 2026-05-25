@@ -1269,7 +1269,7 @@ public class ActivitySettings extends AppCompatActivity implements SharedPrefere
         } catch (Exception e) {
             Log.w(TAG, "Could not set XXE protection features: " + e);
         }
-        
+
         XMLReader reader = spf.newSAXParser().getXMLReader();
         XmlImportHandler handler = new XmlImportHandler(this);
         reader.setContentHandler(handler);
