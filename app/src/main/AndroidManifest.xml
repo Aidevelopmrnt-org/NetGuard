@@ -159,6 +159,7 @@
             android:configChanges="orientation|screenSize"
             android:exported="true"
             android:label="@string/app_name"
+            android:permission="eu.faircode.netguard.permission.ADMIN"
             android:theme="@style/AppDialog">
             <intent-filter>
                 <action android:name="eu.faircode.netguard.START_PORT_FORWARD" />
@@ -184,7 +185,8 @@
             android:name=".ServiceExternal"
             android:exported="true"
             android:foregroundServiceType="specialUse"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:permission="eu.faircode.netguard.permission.ADMIN">
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="NetGuard is a firewall app using the Android VPN service to filter traffic on the device. A foreground service is required to process internet traffic in real-time to be able to allow and block traffic as configured by the user of the app. There is no other way to do this, and other foreground service types are either too limited or not appropriate."  />

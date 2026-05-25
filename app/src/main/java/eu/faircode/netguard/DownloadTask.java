@@ -142,12 +142,16 @@ public class DownloadTask extends AsyncTask<Object, Integer, Object> {
     protected void onCancelled() {
         super.onCancelled();
         Log.i(TAG, "Cancelled");
+        if (wakeLock != null && wakeLock.isHeld())
+            wakeLock.release();
+        NotificationManagerCompat.from(context).cancel(ServiceSinkhole.NOTIFY_DOWNLOAD);
         listener.onCancelled();
     }
 
     @Override
     protected void onPostExecute(Object result) {
-        wakeLock.release();
+        if (wakeLock != null && wakeLock.isHeld())
+            wakeLock.release();
         NotificationManagerCompat.from(context).cancel(ServiceSinkhole.NOTIFY_DOWNLOAD);
         if (result instanceof Throwable) {
             Log.e(TAG, result.toString() + "\n" + Log.getStackTraceString((Throwable) result));

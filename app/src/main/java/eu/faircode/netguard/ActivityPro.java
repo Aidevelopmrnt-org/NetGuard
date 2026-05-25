@@ -145,7 +145,7 @@ public class ActivityPro extends AppCompatActivity {
                 }
 
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://www.netguard.me/#" + sku));
+                intent.setData(Uri.parse("https://www.netguard.me/#" + sku));
                 if (intent.resolveActivity(getPackageManager()) != null)
                     startActivity(intent);
             }
