@@ -486,7 +486,7 @@ public class Util {
                 byte[] bytes = digest.digest(cert);
                 StringBuilder sb = new StringBuilder();
                 for (byte b : bytes)
-                    sb.append(Integer.toString(b & 0xff, 16).toLowerCase());
+                    sb.append(String.format("%02x", b & 0xff));
                 return sb.toString();
             } else {
                 info = pm.getPackageInfo(pkg, PackageManager.GET_SIGNATURES);
@@ -495,7 +495,7 @@ public class Util {
                 byte[] bytes = digest.digest(cert);
                 StringBuilder sb = new StringBuilder();
                 for (byte b : bytes)
-                    sb.append(Integer.toString(b & 0xff, 16).toLowerCase());
+                    sb.append(String.format("%02x", b & 0xff));
                 return sb.toString();
             }
         } catch (Throwable ex) {
