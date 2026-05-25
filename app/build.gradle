@@ -3,8 +3,12 @@ apply plugin: 'com.android.application'
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 if (keystorePropertiesFile.exists()) {
-    keystorePropertiesFile.withInputStream { stream -> 
-        keystoreProperties.load(stream)
+    try {
+        keystorePropertiesFile.withInputStream { stream -> 
+            keystoreProperties.load(stream)
+        }
+    } catch (Exception e) {
+        logger.warn("Failed to load keystore.properties: " + e.message)
     }
 }
 

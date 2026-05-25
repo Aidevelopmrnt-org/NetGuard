@@ -480,16 +480,24 @@ public class Util {
             PackageInfo info;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 info = pm.getPackageInfo(pkg, PackageManager.GET_SIGNING_CERTIFICATES);
+                // Use signingInfo for API 28+
+                byte[] cert = info.signingInfo.getApkContentsSigners()[0].toByteArray();
+                MessageDigest digest = MessageDigest.getInstance("SHA1");
+                byte[] bytes = digest.digest(cert);
+                StringBuilder sb = new StringBuilder();
+                for (byte b : bytes)
+                    sb.append(Integer.toString(b & 0xff, 16).toLowerCase());
+                return sb.toString();
             } else {
                 info = pm.getPackageInfo(pkg, PackageManager.GET_SIGNATURES);
+                byte[] cert = info.signatures[0].toByteArray();
+                MessageDigest digest = MessageDigest.getInstance("SHA1");
+                byte[] bytes = digest.digest(cert);
+                StringBuilder sb = new StringBuilder();
+                for (byte b : bytes)
+                    sb.append(Integer.toString(b & 0xff, 16).toLowerCase());
+                return sb.toString();
             }
-            byte[] cert = info.signatures[0].toByteArray();
-            MessageDigest digest = MessageDigest.getInstance("SHA1");
-            byte[] bytes = digest.digest(cert);
-            StringBuilder sb = new StringBuilder();
-            for (byte b : bytes)
-                sb.append(Integer.toString(b & 0xff, 16).toLowerCase());
-            return sb.toString();
         } catch (Throwable ex) {
             Log.e(TAG, ex.toString() + "\n" + Log.getStackTraceString(ex));
             return null;
